@@ -1,10 +1,8 @@
 language: node_js
 node_js:
-  - "0.10"
-script: "npm test && node sauce.js"
+- '0.10'
+script: npm test && node test/sauce.js
 env:
   global:
-    - SAUCE_USERNAME: codeparty
-    - secure: "Jcyh9nppSTYZhcdFmsebom5KomiSEUmTLvQYMjjBC6j5YNyQ7CstGrBBQhAg1Upz4H2ri9tAL23a6taM0uqe0KAUrdAbB/+cqzEm1sPeLDgYMC+wp+WMxq7Nk5GcT/2Q2Sd5p2lsvfTCY2bPU+ZfHDok6LGCqIws3Vkph7QTZB8="
-    # - secure: "a0MQe/XEAlo8iD+zi5KlwJ6Qb7ix0wMWjbHAHpZjVCYtGmpGBB3+ABUoitM6CjVs38woiogqP53PYYI84lO+7/SzjiTqQWYYKKV4xsHGXKS2q+RVlFGyEkenoEqrbrvOIPuyhGgqxJQRJosWk74BaY0dxEnsCg7kAy10Twbf3dI="
-
+  - SAUCE_USERNAME: codeparty
+  - secure: Dq9RC3odKow8QeKVBe9F0yu4DHSGnZVBEVDPRG7V2z8K49HXtc2PjYNDQkVqg0QGtg83TmToxwpndbwaEkjHI/7vzg0QVeqll0RaXTuOrEzbiKzpFlrSkAQ7gIFFEM4LUDftXLebcz+Zg6KFpjf0Nu6CanqhQUk/9PCi08GPy0Y=
