@@ -23,9 +23,30 @@
   var expressions = module.exports;
 </script>
 
-<script src="test.mocha.js"></script>
+<script src="index.js"></script>
 
 <script>
   mocha.checkLeaks();
-  mocha.run();
+  if (window.mochaPhantomJS) mochaPhantomJS.run();
+  else {
+    (function(runner){
+      var failed = [];
+
+      runner.on('fail', function(test, err){
+        failed.push({
+          title: test.title,
+          fullTitle: test.fullTitle(),
+          error: {
+            message: err.message,
+            stack: err.stack
+          }
+        });
+      });
+
+      runner.on('end', function(){
+        runner.stats.failed = failed;
+        global.mochaResults = runner.stats;
+      });
+    })(mocha.run());
+  }
 </script>
