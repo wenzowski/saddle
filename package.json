@@ -16,8 +16,6 @@
   },
   "devDependencies": {
     "mocha-cloud": "^0.1.0",
-    "mocha-cloud-grid-view": "git://github.com/jaredhanson/mocha-cloud-grid-view.git#fix-max-calc",
-    "term-canvas": "0.0.5",
     "node-static": "^0.7.3",
     "sauce-tunnel": "^2.0.1",
     "mocha": "~1.9.0",

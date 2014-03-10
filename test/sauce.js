@@ -1,17 +1,8 @@
 var statik      = require('node-static')
-var util        = require('util')
-var SauceTunnel = require('sauce-tunnel')
 var Cloud       = require('mocha-cloud')
-var Canvas      = require('term-canvas')
-var GridView    = require('mocha-cloud-grid-view')
+var SauceTunnel = require('sauce-tunnel')
 
-var port   = process.env.PORT || 8888
-var tests  = 'http://localhost:' + port + '/test/'
 var server = serve('.') // relative to caller *not* this file
-
-var size   = process.stdout.getWindowSize()
-var canvas = new Canvas(size[0], size[1])
-var ctx    = canvas.getContext('2d')
 
 var tunnel = new SauceTunnel( env('SAUCE_USERNAME')
                             , env('SAUCE_ACCESS_KEY')
@@ -19,39 +10,37 @@ var tunnel = new SauceTunnel( env('SAUCE_USERNAME')
                             , true
                             )
 
-process.on('SIGINT', function () {
-  console.error('Received SIGINT, exiting...')
-  exit(2, ctx, tunnel, server)
-})
-
-process.on('uncaughtException', function (err) {
-  exit(err, ctx, tunnel, server)
-})
-
-console.log('starting sauce-connect...')
 tunnel.start(function (status) {
   if (status === false) throw new Error('Failed to start tunnel.')
 
   var cloud = new Cloud('saddle', env('SAUCE_USERNAME'), env('SAUCE_ACCESS_KEY'))
 
   // see https://saucelabs.com/platforms
-  cloud.browser( 'internet explorer' , '11' , 'Windows 8.1'  )
-  cloud.browser( 'firefox'           , '27' , 'Windows 2003' )
+  cloud.browser('internet explorer', '11', 'Windows 8.1')
+  // cloud.browser('internet explorer', '10', 'Windows 8')
+  // cloud.browser('firefox', '27', 'Linux')
+  // cloud.browser('chrome', '32', 'Windows 7')
 
-  cloud.url(tests)
+  cloud.url('http://localhost:8888/test/')
 
-  var grid = new GridView(cloud, ctx)
-  grid.size(canvas.width, canvas.height)
-  ctx.hideCursor()
+  cloud.on('init', function(browser){
+    console.log('  init : %s %s', browser.browserName, browser.version)
+  })
+
+  cloud.on('start', function(browser){
+    console.log('  start : %s %s', browser.browserName, browser.version)
+  })
+
+  cloud.on('end', function(browser, res){
+    console.log('  end : %s %s : %d failures', browser.browserName, browser.version, res.failures)
+
+    tunnel.stop(function(){
+      process.exit(res.failures)
+    })
+  })
 
   server.listen(8888, function () {
-    cloud.start(function () {
-      grid.showFailures()
-      setTimeout(function () {
-        ctx.showCursor()
-        exit(grid.totalFailures(), ctx, tunnel, server)
-      }, 100)
-    })
+    cloud.start()
   })
 })
 
@@ -68,26 +57,5 @@ function serve(dir, opts) {
       files.serve(request, response)
     }).resume()
   })
-}
-
-function exit(err, ctx, tunnel, server) {
-  try {
-    if (!process.env.CI) ctx.reset()
-    if (util.isError(err)) {
-      console.error(err.stack)
-      err = 99
-    }
-    console.error('cleaning up...')
-    if (server.address()) server.close()
-    tunnel.stop(function(){
-      process.exit(err)
-    })
-    setTimeout(function () {
-      process.exit(err)
-    }, 5000)
-  } catch(err) {
-    console.error(err.stack)
-    process.exit(99)
-  }
 }
 
