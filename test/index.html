@@ -7,6 +7,7 @@
 <div id="fixture"></div>
 
 <div id="mocha"></div>
+<script src="../node_modules/stacktrace-js/stacktrace.js"></script>
 <script src="../node_modules/expect.js/expect.js"></script>
 <script src="../node_modules/mocha/mocha.js"></script>
 <script>mocha.setup('bdd')</script>
@@ -26,6 +27,25 @@
 <script src="index.js"></script>
 
 <script>
-  mocha.checkLeaks();
-  mocha.run();
+  (function () {
+    mocha.checkLeaks();
+    var runner = mocha.run();
+    var failed = [];
+
+    runner.on('fail', function(test, err){
+      failed.push({
+        title: test.title,
+        fullTitle: test.fullTitle(),
+        error: {
+          message: err.message,
+          stack: printStackTrace({e: err})
+        }
+      });
+    });
+
+    runner.on('end', function(){
+      runner.stats.failed = failed;
+      global.mochaResults = runner.stats;
+    });
+  }());
 </script>
