@@ -3,7 +3,7 @@ var Cloud       = require('mocha-cloud')
 var SauceTunnel = require('sauce-tunnel')
 
 var cloud = new Cloud('saddle', env('SAUCE_USERNAME'), env('SAUCE_ACCESS_KEY'))
-cloud.concurrency(2 || process.env.SAUCE_CONCURRENCY)
+cloud.concurrency(parseInt(process.env.SAUCE_CONCURRENCY) || 2)
 cloud.build(process.env.TRAVIS_JOB_ID)
 
 // see https://saucelabs.com/platforms
