@@ -4,5 +4,7 @@ node_js:
 script: npm test && node test/sauce.js
 env:
   global:
-  - SAUCE_USERNAME: codeparty
-  - secure: Dq9RC3odKow8QeKVBe9F0yu4DHSGnZVBEVDPRG7V2z8K49HXtc2PjYNDQkVqg0QGtg83TmToxwpndbwaEkjHI/7vzg0QVeqll0RaXTuOrEzbiKzpFlrSkAQ7gIFFEM4LUDftXLebcz+Zg6KFpjf0Nu6CanqhQUk/9PCi08GPy0Y=
+  - SAUCE_CONCURRENCY: 3
+  - SAUCE_USERNAME: saddle
+  - secure: SKm/VXznX6J7uVD5P+winV5VDHbqRltChkuepmRG+kc1LCl6ZZjfEp6Yjbx6SwU9/cWZmNgLtRg01LHyPQb05BMfps2khj2zTvRslLQpjxuH36wuFytygN7U74q6bmbTAmpJo/YkLIT9hMvAwKLmbmdgIQDlNGpC6uM9qxngvUE=
+
